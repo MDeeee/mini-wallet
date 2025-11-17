@@ -1,0 +1,420 @@
+{
+    "info": {
+        "_postman_id": "mini-wallet-api-2025",
+        "name": "Mini Wallet API",
+        "description": "Complete API collection for Mini Wallet application with authentication, money transfers, and transaction history.",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "auth": {
+        "type": "bearer",
+        "bearer": [
+            {
+                "key": "token",
+                "value": "{{access_token}}",
+                "type": "string"
+            }
+        ]
+    },
+    "item": [
+        {
+            "name": "Authentication",
+            "item": [
+                {
+                    "name": "Register User",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 201) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.token) {",
+                                    "        pm.environment.set('access_token', jsonData.token);",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/register",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "register"
+                            ]
+                        },
+                        "description": "Register a new user account. Returns authentication token automatically saved to environment."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Login",
+                    "event": [
+                        {
+                            "listen": "test",
+                            "script": {
+                                "exec": [
+                                    "if (pm.response.code === 200) {",
+                                    "    var jsonData = pm.response.json();",
+                                    "    if (jsonData.token) {",
+                                    "        pm.environment.set('access_token', jsonData.token);",
+                                    "        console.log('Token saved to environment');",
+                                    "    }",
+                                    "}"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "auth": {
+                            "type": "noauth"
+                        },
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"password123\"\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/login",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "login"
+                            ]
+                        },
+                        "description": "Login with existing credentials. Token is automatically saved to environment variable."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get Authenticated User",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/user",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "user"
+                            ]
+                        },
+                        "description": "Get currently authenticated user details including balance."
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Logout",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/logout",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "logout"
+                            ]
+                        },
+                        "description": "Logout and invalidate current authentication token."
+                    },
+                    "response": []
+                }
+            ],
+            "description": "Authentication endpoints for user registration, login, and logout."
+        },
+        {
+            "name": "Transactions",
+            "item": [
+                {
+                    "name": "Get Transaction History",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/transactions",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "transactions"
+                            ]
+                        },
+                        "description": "Get paginated list of user transactions (sent and received) along with current balance.\n\n**Response includes:**\n- Current balance\n- List of transactions with type (sent/received)\n- Transaction details (amount, commission, status)\n- Related user information"
+                    },
+                    "response": [
+                        {
+                            "name": "Success Response",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions"
+                                    ]
+                                }
+                            },
+                            "status": "OK",
+                            "code": 200,
+                            "_postman_previewlanguage": "json",
+                            "header": [],
+                            "cookie": [],
+                            "body": "{\n    \"balance\": 1000.00,\n    \"transactions\": [\n        {\n            \"id\": 1,\n            \"amount\": \"50.00\",\n            \"commission_fee\": \"0.75\",\n            \"status\": \"completed\",\n            \"type\": \"sent\",\n            \"user\": {\n                \"id\": 2,\n                \"name\": \"Jane Doe\",\n                \"email\": \"jane@example.com\"\n            },\n            \"created_at\": \"2025-01-15T10:30:00.000000Z\"\n        }\n    ]\n}"
+                        }
+                    ]
+                },
+                {
+                    "name": "Transfer Money",
+                    "event": [
+                        {
+                            "listen": "prerequest",
+                            "script": {
+                                "exec": [
+                                    "// Optional: Set dynamic receiver_id if needed",
+                                    "// pm.environment.set('receiver_id', 2);"
+                                ],
+                                "type": "text/javascript"
+                            }
+                        }
+                    ],
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Content-Type",
+                                "value": "application/json"
+                            },
+                            {
+                                "key": "Accept",
+                                "value": "application/json"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"receiver_id\": 2,\n    \"amount\": 50.00\n}"
+                        },
+                        "url": {
+                            "raw": "{{base_url}}/api/v1/transactions",
+                            "host": [
+                                "{{base_url}}"
+                            ],
+                            "path": [
+                                "api",
+                                "v1",
+                                "transactions"
+                            ]
+                        },
+                        "description": "Transfer money to another user.\n\n**Validation Rules:**\n- `receiver_id`: Required, must exist, cannot be yourself\n- `amount`: Required, numeric, min: 0.01, max: 1,000,000\n\n**Commission:**\n- 1.5% commission is automatically calculated and deducted from sender\n- Total debit = amount + commission\n\n**Rate Limiting:**\n- 60 requests per minute per user\n\n**Real-time Broadcasting (Pusher):**\n- After successful transfer, a `money.transferred` event is broadcast via Pusher\n- Event is sent to private channels for both sender and receiver: `user.{userId}`\n- Event data includes: transaction_id, amounts, commission, new balances, timestamp\n- Frontend can listen to this event to update UI in real-time without page refresh"
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"receiver_id\": 2,\n    \"amount\": 50.00\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions"
+                                    ]
+                                }
+                            },
+                            "status": "Created",
+                            "code": 201,
+                            "_postman_previewlanguage": "json",
+                            "header": [],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"Transfer successful\",\n    \"transaction\": {\n        \"id\": 1,\n        \"amount\": \"50.00\",\n        \"commission_fee\": \"0.75\",\n        \"status\": \"completed\",\n        \"type\": \"sent\",\n        \"user\": {\n            \"id\": 2,\n            \"name\": \"Jane Doe\",\n            \"email\": \"jane@example.com\"\n        },\n        \"created_at\": \"2025-01-15T10:30:00.000000Z\"\n    },\n    \"new_balance\": 949.25\n}"
+                        },
+                        {
+                            "name": "Insufficient Balance",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"receiver_id\": 2,\n    \"amount\": 10000.00\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions"
+                                    ]
+                                }
+                            },
+                            "status": "Unprocessable Entity",
+                            "code": 422,
+                            "_postman_previewlanguage": "json",
+                            "header": [],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"Insufficient balance. Required: 10150.00, Available: 1000.00\"\n}"
+                        },
+                        {
+                            "name": "Validation Error",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "body": {
+                                    "mode": "raw",
+                                    "raw": "{\n    \"receiver_id\": 999999,\n    \"amount\": -10\n}",
+                                    "options": {
+                                        "raw": {
+                                            "language": "json"
+                                        }
+                                    }
+                                },
+                                "url": {
+                                    "raw": "{{base_url}}/api/v1/transactions",
+                                    "host": [
+                                        "{{base_url}}"
+                                    ],
+                                    "path": [
+                                        "api",
+                                        "v1",
+                                        "transactions"
+                                    ]
+                                }
+                            },
+                            "status": "Unprocessable Entity",
+                            "code": 422,
+                            "_postman_previewlanguage": "json",
+                            "header": [],
+                            "cookie": [],
+                            "body": "{\n    \"message\": \"The selected receiver does not exist. (and 1 more error)\",\n    \"errors\": {\n        \"receiver_id\": [\n            \"The selected receiver does not exist.\"\n        ],\n        \"amount\": [\n            \"The amount must be at least 0.01.\"\n        ]\n    }\n}"
+                        }
+                    ]
+                }
+            ],
+            "description": "Transaction management endpoints for transferring money and viewing transaction history.",
+            "auth": {
+                "type": "bearer",
+                "bearer": [
+                    {
+                        "key": "token",
+                        "value": "{{access_token}}",
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    ],
+    "event": [
+        {
+            "listen": "prerequest",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        },
+        {
+            "listen": "test",
+            "script": {
+                "type": "text/javascript",
+                "exec": [
+                    ""
+                ]
+            }
+        }
+    ],
+    "variable": [
+        {
+            "key": "base_url",
+            "value": "http://localhost:8000",
+            "type": "string"
+        },
+        {
+            "key": "access_token",
+            "value": "",
+            "type": "string"
+        }
+    ]
+}
