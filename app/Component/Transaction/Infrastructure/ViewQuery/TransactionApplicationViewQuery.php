@@ -26,7 +26,7 @@ final class TransactionApplicationViewQuery implements TransactionViewQuery
             amountInCents: (int) $record->amount,
             commissionFeeInCents: (int) $record->commission_fee,
             status: $record->status->value,
-            createdAt: $record->created_at,
+            created_at: $record->created_at,
         );
     }
 
@@ -46,7 +46,7 @@ final class TransactionApplicationViewQuery implements TransactionViewQuery
                 amountInCents: (int) $record->amount,
                 commissionFeeInCents: (int) $record->commission_fee,
                 status: $record->status->value,
-                createdAt: $record->created_at,
+                created_at: $record->created_at,
             ));
     }
 
@@ -69,7 +69,7 @@ final class TransactionApplicationViewQuery implements TransactionViewQuery
                 amountInCents: (int) $record->amount,
                 commissionFeeInCents: (int) $record->commission_fee,
                 status: $record->status->value,
-                createdAt: $record->created_at,
+                created_at: $record->created_at,
             ));
     }
 }

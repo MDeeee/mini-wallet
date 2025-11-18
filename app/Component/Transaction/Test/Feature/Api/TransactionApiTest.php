@@ -31,12 +31,14 @@ class TransactionApiTest extends TestCase
         $response->assertOk()
             ->assertJsonStructure([
                 'transactions',
-                'balance',
-                'balance_cents',
+                'balance' => ['amount', 'amount_cents', 'currency'],
             ])
             ->assertJson([
-                'balance' => '$500.00',
-                'balance_cents' => 50000,
+                'balance' => [
+                    'amount' => '500.00',
+                    'amount_cents' => 50000,
+                    'currency' => 'USD',
+                ],
             ]);
     }
 
@@ -53,14 +55,28 @@ class TransactionApiTest extends TestCase
         $response->assertCreated()
             ->assertJsonStructure([
                 'message',
-                'transaction' => ['id', 'sender_id', 'receiver_id', 'amount', 'commission_fee'],
-                'new_balance',
+                'transaction' => [
+                    'id',
+                    'sender_id',
+                    'receiver_id',
+                    'amount' => ['amount', 'amount_cents', 'currency'],
+                    'commission_fee' => ['amount', 'amount_cents', 'currency']
+                ],
+                'new_balance' => ['amount', 'amount_cents', 'currency'],
             ])
             ->assertJson([
                 'message' => 'Transfer completed successfully',
                 'transaction' => [
-                    'amount' => 100.00,
-                    'commission_fee' => 1.50, // 1.5% of 100
+                    'amount' => [
+                        'amount' => '100.00',
+                        'amount_cents' => 10000,
+                        'currency' => 'USD',
+                    ],
+                    'commission_fee' => [
+                        'amount' => '1.50',
+                        'amount_cents' => 150,
+                        'currency' => 'USD',
+                    ],
                 ],
             ]);
 
@@ -98,9 +114,7 @@ class TransactionApiTest extends TestCase
             ->assertJsonValidationErrors(['receiver_id']);
     }
 
-    /**
-     * @dataProvider invalidAmountProvider
-     */
+    #[\PHPUnit\Framework\Attributes\DataProvider('invalidAmountProvider')]
     public function test_validation_fails_with_invalid_amount($amount): void
     {
         $sender = User::factory()->create(['balance' => 20000]); // $200 in cents
@@ -196,8 +210,16 @@ class TransactionApiTest extends TestCase
             $response->assertCreated()
                 ->assertJson([
                     'transaction' => [
-                        'amount' => $case['amount'],
-                        'commission_fee' => $case['commission'],
+                        'amount' => [
+                            'amount' => number_format($case['amount'], 2, '.', ''),
+                            'amount_cents' => (int)($case['amount'] * 100),
+                            'currency' => 'USD',
+                        ],
+                        'commission_fee' => [
+                            'amount' => number_format($case['commission'], 2, '.', ''),
+                            'amount_cents' => (int)($case['commission'] * 100),
+                            'currency' => 'USD',
+                        ],
                     ],
                 ]);
 

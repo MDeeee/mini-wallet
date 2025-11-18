@@ -43,9 +43,9 @@ final readonly class TransferMoneyHandler
                 transactionId: $result->transaction->id,
                 senderId: $result->transaction->sender_id,
                 receiverId: $result->transaction->receiver_id,
-                amount: Money::fromCents($result->transaction->amount)->toFloat(),
-                commissionFee: Money::fromCents($result->transaction->commission_fee)->toFloat(),
-                senderNewBalance: $result->senderNewBalance,
+                amount: Money::fromCents($result->transaction->amount),
+                commissionFee: Money::fromCents($result->transaction->commission_fee),
+                senderNewBalance: Money::fromCents((int) ($result->senderNewBalance * 100)),
                 message: 'Transfer completed successfully'
             ),
             201

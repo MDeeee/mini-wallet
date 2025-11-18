@@ -2,17 +2,17 @@
 
 > A digital wallet application built with Laravel 12 and Vue.js, featuring secure money transfers, real-time updates via Pusher, and comprehensive test coverage.
 
-**Technical Assignment for Pimono**
+![Dashboard Preview](screenshots/dashboard.png)
 
 ## ✨ Features
 
-- 💸 **Secure Money Transfers** - Atomic transactions with pessimistic locking to prevent race conditions
-- 📊 **1.5% Commission** - Automatic commission calculation on all transfers
-- ⚡ **Real-time Updates** - Pusher broadcasting for instant balance and transaction notifications
-- 🔐 **API Authentication** - Laravel Sanctum token-based authentication
-- 🛡️ **Rate Limiting** - 10 transfers per minute to prevent abuse
-- 🧪 **Comprehensive Testing** - 42 tests (171 assertions) covering unit, feature, concurrency, and broadcasting scenarios
-- 🏗️ **Clean Architecture** - Repository pattern, Service layer, DTOs, and Event-driven design
+- **Secure Money Transfers** - Atomic transactions with pessimistic locking to prevent race conditions
+- **1.5% Commission** - Automatic commission calculation on all transfers
+- **Real-time Updates** - Pusher broadcasting for instant balance and transaction notifications
+- **API Authentication** - Laravel Sanctum token-based authentication
+- **Rate Limiting** - 10 transfers per minute to prevent abuse
+- **Comprehensive Testing** - 42 tests (171 assertions) covering unit, feature, concurrency, and broadcasting scenarios
+- **Clean Architecture** - Repository pattern, Service layer, DTOs, and Event-driven design
 
 ## 🛠️ Tech Stack
 
@@ -29,11 +29,13 @@
 - **DTO Pattern** - Type-safe data transfer objects (readonly PHP 8.3)
 - **Event-Driven** - Pusher broadcasting for real-time updates
 
-### Frontend (Planned)
-- Vue 3 + Composition API
-- Pinia for state management
-- Vite for build tooling
-- Laravel Echo for WebSocket subscriptions
+### Frontend
+- **Vue 3** with Composition API
+- **Pinia** for state management
+- **Vite** for lightning-fast build tooling
+- **Tailwind CSS** for beautiful, responsive UI
+- **Laravel Echo** for WebSocket subscriptions
+- **Real-time notifications** with animated toasts
 
 ## 📋 Requirements
 
@@ -48,7 +50,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/MDeeee/mini-wallet.git
 cd mini-wallet
 ```
 
@@ -130,9 +132,6 @@ php artisan test
 
 # Run specific test suite
 php artisan test --filter=TransferServiceTest
-
-# Run with coverage (requires Xdebug)
-./vendor/bin/pest --coverage --min=80
 ```
 
 ### Test Coverage
@@ -224,8 +223,11 @@ Authorization: Bearer {token}
 
 # Response
 {
-  "balance": "$100.00",
-  "balance_cents": 10000,
+  "balance": {
+    "amount": "100.00",
+    "amount_cents": 10000,
+    "currency": "USD"
+  },
   "transactions": {
     "data": [
       {
@@ -238,10 +240,16 @@ Authorization: Bearer {token}
           "id": 2,
           "name": "Jane Doe"
         },
-        "amount": "$50.00",
-        "amount_cents": 5000,
-        "commission_fee": "$0.75",
-        "commission_fee_cents": 75,
+        "amount": {
+          "amount": "50.00",
+          "amount_cents": 5000,
+          "currency": "USD"
+        },
+        "commission_fee": {
+          "amount": "0.75",
+          "amount_cents": 75,
+          "currency": "USD"
+        },
         "status": "completed",
         "created_at": "2025-01-15T10:30:00.000000Z"
       }
@@ -281,15 +289,24 @@ Content-Type: application/json
       "id": 2,
       "name": "Jane Doe"
     },
-    "amount": "$50.00",
-    "amount_cents": 5000,
-    "commission_fee": "$0.75",
-    "commission_fee_cents": 75,
+    "amount": {
+      "amount": "50.00",
+      "amount_cents": 5000,
+      "currency": "USD"
+    },
+    "commission_fee": {
+      "amount": "0.75",
+      "amount_cents": 75,
+      "currency": "USD"
+    },
     "status": "completed",
     "created_at": "2025-01-15T10:30:00.000000Z"
   },
-  "new_balance": "$949.25",
-  "new_balance_cents": 94925
+  "new_balance": {
+    "amount": "949.25",
+    "amount_cents": 94925,
+    "currency": "USD"
+  }
 }
 ```
 
@@ -507,6 +524,10 @@ When extending the application for enterprise use, consider:
 
 The current implementation uses standard foreign key constraints for simplicity and clarity. For production systems handling millions of transactions, consider implementing time-based partitioning strategies with appropriate data archival processes.
 
+### Caching Strategy
+
+**Intentionally Not Implemented** - Financial transaction data is never cached to ensure real-time accuracy and prevent stale balance information. Pusher provides instant updates, and pessimistic locking requires fresh database reads. For production at scale, consider caching only non-financial data like user profiles or aggregated statistics with Redis.
+
 ### Code Style
 
 ```bash
@@ -516,32 +537,3 @@ The current implementation uses standard foreign key constraints for simplicity 
 # Check for code quality issues
 ./vendor/bin/phpstan analyse
 ```
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Write tests for your changes
-4. Ensure all tests pass (`php artisan test`)
-5. Commit your changes (`git commit -m 'Add amazing feature'`)
-6. Push to the branch (`git push origin feature/amazing-feature`)
-7. Open a Pull Request
-
-## 📄 License
-
-This project is developed as a technical assignment for Pimono.
-
----
-
----
-
-## 📧 Contact
-
-**Developed for:** Pimono Technical Assignment  
-**Email:** info@pimono.ae
-
----
-
-**Project Status:** ✅ Backend Complete | ⏳ Frontend Pending  
-**Test Coverage:** 42 tests, 171 assertions, 100% pass rate  
-**Laravel Version:** 12.38.1 | **PHP Version:** 8.3+

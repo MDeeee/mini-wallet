@@ -23,9 +23,8 @@ final readonly class GetUserTransactionsHandler
         $balanceMoney = Money::fromCents(auth()->user()?->balance ?? 0);
 
         return $this->response->json([
-            'transactions' => $this->viewQuery->listByUserId(auth()->id()),
-            'balance' => $balanceMoney->toFormattedString(),
-            'balance_cents' => $balanceMoney->toCents(),
+            'transactions' => $this->viewQuery->listByUserId(auth()->id(), perPage: 15),
+            'balance' => $balanceMoney->toArray(),
         ]);
     }
 }

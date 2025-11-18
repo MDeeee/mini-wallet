@@ -94,6 +94,15 @@ final readonly class Money
 
     public function toFormattedString(): string
     {
-        return '$' . number_format($this->toFloat(), 2, '.', ',');
+        return number_format($this->toFloat(), 2, '.', '');
+    }
+
+    public function toArray(string $currency = 'USD'): array
+    {
+        return [
+            'amount' => $this->toFormattedString(),
+            'amount_cents' => $this->toCents(),
+            'currency' => $currency,
+        ];
     }
 }

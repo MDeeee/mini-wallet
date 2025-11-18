@@ -15,7 +15,6 @@ Route::middleware(['auth:sanctum'])
             'id' => $user->id,
             'name' => $user->name,
             'email' => $user->email,
-            'balance' => $balanceMoney->toFormattedString(),
-            'balance_cents' => $balanceMoney->toCents(),
+            'balance' => $balanceMoney->toArray(),
         ]);
     })->name('user.current');

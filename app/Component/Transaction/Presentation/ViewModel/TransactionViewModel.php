@@ -4,13 +4,14 @@ declare(strict_types = 1);
 
 namespace App\Component\Transaction\Presentation\ViewModel;
 
+use App\Component\Transaction\Domain\ValueObject\Money;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Carbon;
 
 readonly class TransactionViewModel implements Arrayable
 {
     public function __construct(
-        private int $id,
+        public int $id,
         private int $senderId,
         private string $senderName,
         private int $receiverId,
@@ -18,7 +19,7 @@ readonly class TransactionViewModel implements Arrayable
         private int $amountInCents,
         private int $commissionFeeInCents,
         private string $status,
-        private Carbon $createdAt
+        public Carbon $created_at
     ) {
     }
 
@@ -34,12 +35,10 @@ readonly class TransactionViewModel implements Arrayable
                 'id' => $this->receiverId,
                 'name' => $this->receiverName,
             ],
-            'amount' => \App\Component\Transaction\Domain\ValueObject\Money::fromCents($this->amountInCents)->toFormattedString(),
-            'amount_cents' => $this->amountInCents,
-            'commission_fee' => \App\Component\Transaction\Domain\ValueObject\Money::fromCents($this->commissionFeeInCents)->toFormattedString(),
-            'commission_fee_cents' => $this->commissionFeeInCents,
+            'amount' => Money::fromCents($this->amountInCents)->toArray(),
+            'commission_fee' => Money::fromCents($this->commissionFeeInCents)->toArray(),
             'status' => $this->status,
-            'created_at' => $this->createdAt,
+            'created_at' => $this->created_at,
         ];
     }
 }
